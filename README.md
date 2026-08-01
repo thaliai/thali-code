@@ -16,7 +16,7 @@ Claude, GPT and more — billed in rupees, with 1,000,000 free tokens to start.
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/thali-ai/thali-code/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/thaliai/thali-code/main/install.sh | bash
 ```
 
 This installs the OpenCode CLI (if needed), drops in the Thali provider config,
