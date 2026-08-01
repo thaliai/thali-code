@@ -36,23 +36,29 @@ and adds a `thali-code` command. It backs up any existing OpenCode config first.
 
 That's it. You're running an agentic coding assistant on Thali.
 
-## Switch models
+## Every Thali model, in the picker — automatically
 
-Thali Code defaults to **DeepSeek V3** (strong, cheap, great tool use). Inside
-the TUI use the model picker, or set a default in
-`~/.config/opencode/opencode.json`:
+The install pulls Thali's **live catalog** into OpenCode. Open the `/models`
+picker and you'll see every model Thali currently serves — DeepSeek, Qwen,
+Llama, Sarvam, Kimi, Claude, GPT and the rest — no hand-editing.
+
+When Thali adds models (new providers, new releases), refresh the list:
+
+```bash
+thali-code sync
+```
+
+Thali Code defaults to **DeepSeek V3** (strong, cheap, great tool use). Pick any
+other in the TUI, or pin a default in `~/.config/opencode/opencode.json`:
 
 ```json
 { "model": "thali/anthropic/claude-sonnet-4.6" }
 ```
 
-Available out of the box: DeepSeek V3 / R1, Qwen3 Coder / 235B, Kimi K3,
-Llama 4 Maverick, GLM 4.5, Claude Sonnet/Opus 4.6, GPT-4.1 — and anything else in
-the [Thali catalog](https://thaliai.in/models) by adding it to the `models` map.
-
-> **Free-tier note:** the 1,000,000 free tokens work on Thali's open-model tier
-> (DeepSeek, Qwen, Llama, Sarvam, …). Frontier models (Claude, GPT, Kimi K3) run
-> on topped-up credit.
+> **Credit:** the 1,000,000 free tokens work on Thali's open-model tier
+> (DeepSeek, Qwen, Llama, Sarvam, …). Frontier models (Claude, GPT, Kimi K3) draw
+> on topped-up credit — pick one before you've added funds and Thali replies with
+> a clear "insufficient credit" message, not a silent failure.
 
 ## What this is — and isn't
 

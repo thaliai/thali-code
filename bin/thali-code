@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Thali Code — OpenCode, pointed at Thali.
+#
+#   thali-code            run the coding agent
+#   thali-code sync       refresh the model list from Thali's live catalog
+#
+# The install script rewrites SYNC_SCRIPT to the installed path.
+set -euo pipefail
+SYNC_SCRIPT="${THALI_SYNC_SCRIPT:-$HOME/.local/bin/thali-sync.mjs}"
+
+if [ "${1:-}" = "sync" ]; then
+  if ! command -v node >/dev/null 2>&1; then
+    echo "Model sync needs Node.js 18+. Install it, or edit ~/.config/opencode/opencode.json by hand."
+    exit 1
+  fi
+  exec node "$SYNC_SCRIPT"
+fi
+
+if [ -z "${THALI_API_KEY:-}" ]; then
+  echo "Set your Thali API key first:  export THALI_API_KEY=thali-sk-…"
+  echo "Get one — 1,000,000 free tokens — at https://thaliai.in"
+  exit 1
+fi
+
+exec opencode "$@"
