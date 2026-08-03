@@ -4,14 +4,15 @@
 #   thali            run the coding agent
 #   thali sync       refresh the model list from Thali's live catalog
 #
+# Runs the Thali Code engine (branded OpenCode) from source via Bun.
 set -euo pipefail
+
+ENGINE_DIR="${THALI_ENGINE_DIR:-$HOME/.thali-code/engine}"
 SYNC_SCRIPT="${THALI_SYNC_SCRIPT:-$HOME/.local/bin/thali-sync.mjs}"
+export PATH="$HOME/.bun/bin:$PATH"
 
 if [ "${1:-}" = "sync" ]; then
-  if ! command -v node >/dev/null 2>&1; then
-    echo "Model sync needs Node.js 18+. Install it, or edit ~/.config/opencode/opencode.json by hand."
-    exit 1
-  fi
+  command -v node >/dev/null 2>&1 || { echo "Model sync needs Node.js 18+."; exit 1; }
   exec node "$SYNC_SCRIPT"
 fi
 
@@ -21,4 +22,10 @@ if [ -z "${THALI_API_KEY:-}" ]; then
   exit 1
 fi
 
-exec opencode "$@"
+if [ ! -d "$ENGINE_DIR" ]; then
+  echo "Thali Code engine not found. Re-run the installer:"
+  echo "  curl -fsSL https://raw.githubusercontent.com/thaliai/thali-code/main/install.sh | bash"
+  exit 1
+fi
+
+exec bun run "$ENGINE_DIR/packages/opencode/src/index.ts" "$@"
