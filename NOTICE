@@ -1,11 +1,12 @@
 Thali Code
 ==========
 
-Thali Code is a Thali-configured distribution of OpenCode. It runs the OpenCode
-engine from source, pointed at Thali (https://thaliai.in), with a provider
-configuration, an installer, and a small branding change (the terminal splash
-logo shows "THALI CODE"). The coding agent itself is OpenCode, used under its MIT
-license — which permits modification and redistribution — reproduced below.
+Thali Code is a Thali-configured distribution of OpenCode. It builds the OpenCode
+engine into a standalone binary, pointed at Thali (https://thaliai.in), with a
+provider configuration, an installer, and branding changes: the splash logo and
+the user-visible product name read "Thali Code", and the terminal command is
+"thali". The coding agent itself is OpenCode, used under its MIT license — which
+permits modification and redistribution — reproduced below.
 
 Thali-authored parts of this repository (the installer, the Thali provider
 config, the `thali-code` wrapper, and this documentation) are © 2026 Thali Tech

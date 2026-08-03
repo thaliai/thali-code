@@ -22,7 +22,7 @@ const CFG = path.join(CFG_DIR, "opencode.json");
 
 // Preferred default coding model, first that exists in the live catalog.
 const PREFERRED = [
-  "deepseek/deepseek-v3",
+  "deepseek/deepseek-v3.2",
   "qwen/qwen3-coder",
   "deepseek/deepseek-r1",
   "anthropic/claude-sonnet-4.6",

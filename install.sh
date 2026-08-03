@@ -41,9 +41,11 @@ fi
 git -C "$ENGINE_DIR" fetch -q --depth 1 origin "$OPENCODE_COMMIT"
 git -C "$ENGINE_DIR" checkout -q -f FETCH_HEAD
 
-# 3. apply Thali branding (the THALI CODE splash, in teal)
-curl -fsSL "$RAW/engine/logo.ts"  -o "$ENGINE_DIR/packages/tui/src/logo.ts"
-curl -fsSL "$RAW/engine/logo.tsx" -o "$ENGINE_DIR/packages/tui/src/component/logo.tsx"
+# 3. apply Thali branding — the THALI CODE splash (teal) + user-visible text
+curl -fsSL "$RAW/engine/logo.ts"    -o "$ENGINE_DIR/packages/tui/src/logo.ts"
+curl -fsSL "$RAW/engine/logo.tsx"   -o "$ENGINE_DIR/packages/tui/src/component/logo.tsx"
+curl -fsSL "$RAW/engine/rebrand.sh" -o "$ENGINE_DIR/.thali-rebrand.sh"
+bash "$ENGINE_DIR/.thali-rebrand.sh" "$ENGINE_DIR" >/dev/null
 say "Applied Thali Code branding."
 
 # 4. dependencies + build the branded binary (bakes the THALI CODE splash in, and
