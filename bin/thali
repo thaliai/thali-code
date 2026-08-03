@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# Thali Code — OpenCode, pointed at Thali.
+# Thali Code — an AI coding agent for your terminal, wired to Thali.
 #
-#   thali-code            run the coding agent
-#   thali-code sync       refresh the model list from Thali's live catalog
+#   thali            run the coding agent
+#   thali sync       refresh the model list from Thali's live catalog
 #
-# The install script rewrites SYNC_SCRIPT to the installed path.
 set -euo pipefail
 SYNC_SCRIPT="${THALI_SYNC_SCRIPT:-$HOME/.local/bin/thali-sync.mjs}"
 

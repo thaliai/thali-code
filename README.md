@@ -19,8 +19,8 @@ Claude, GPT and more — billed in rupees, with 1,000,000 free tokens to start.
 curl -fsSL https://raw.githubusercontent.com/thaliai/thali-code/main/install.sh | bash
 ```
 
-This installs the OpenCode CLI (if needed), drops in the Thali provider config,
-and adds a `thali-code` command. It backs up any existing OpenCode config first.
+This installs the Thali Code engine (if needed), the Thali provider config, and
+a `thali` command. It backs up any existing config first.
 
 ## Set up (30 seconds)
 
@@ -31,7 +31,7 @@ and adds a `thali-code` command. It backs up any existing OpenCode config first.
    ```
 3. From any project:
    ```bash
-   thali-code
+   thali
    ```
 
 That's it. You're running an agentic coding assistant on Thali.
@@ -45,7 +45,7 @@ Llama, Sarvam, Kimi, Claude, GPT and the rest — no hand-editing.
 When Thali adds models (new providers, new releases), refresh the list:
 
 ```bash
-thali-code sync
+thali sync
 ```
 
 Thali Code defaults to **DeepSeek V3** (strong, cheap, great tool use). Pick any

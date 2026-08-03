@@ -43,23 +43,24 @@ say "Thali configuration installed → $CFG"
 # 3. model-sync script + the branded command
 mkdir -p "$BIN_DIR"
 curl -fsSL "$RAW/bin/sync-models.mjs" -o "$SYNC_DST"
-curl -fsSL "$RAW/bin/thali-code" -o "$BIN_DIR/thali-code"
-chmod +x "$BIN_DIR/thali-code"
-say "Installed the 'thali-code' command → $BIN_DIR/thali-code"
+curl -fsSL "$RAW/bin/thali" -o "$BIN_DIR/thali"
+chmod +x "$BIN_DIR/thali"
+rm -f "$BIN_DIR/thali-code"  # superseded by 'thali'
+say "Installed the 'thali' command → $BIN_DIR/thali"
 case ":$PATH:" in *":$BIN_DIR:"*) ;; *) warn "Add to PATH:  export PATH=\"$BIN_DIR:\$PATH\"" ;; esac
 
 # 4. load the live Thali catalog (model listing is public)
 if command -v node >/dev/null 2>&1; then
   say "Loading the Thali model catalog…"
-  node "$SYNC_DST" || warn "Run 'thali-code sync' after setting your key to load models."
+  node "$SYNC_DST" || warn "Run 'thali sync' after setting your key to load models."
 else
-  warn "Node.js 18+ not found — run 'thali-code sync' later to load all models."
+  warn "Node.js 18+ not found — run 'thali sync' later to load all models."
 fi
 
 # 5. the key
 printf "\n${BOLD}Almost there.${RST}\n"
 warn "1. Get your key — 1,000,000 free tokens — at https://thaliai.in"
 warn "2. export THALI_API_KEY=thali-sk-…"
-warn "3. run:  thali-code        (use /models to pick any model)"
-warn "   later:  thali-code sync (refresh the model list any time)"
+warn "3. run:  thali             (use /models to pick any model)"
+warn "   later:  thali sync      (refresh the model list any time)"
 printf "\n"
