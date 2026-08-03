@@ -4,7 +4,7 @@
 #   thali            run the coding agent
 #   thali sync       refresh the model list from Thali's live catalog
 #
-# Runs the Thali Code engine (branded OpenCode) from source via Bun.
+# Runs the Thali Code engine (branded OpenCode), compiled to a standalone binary.
 set -euo pipefail
 
 ENGINE_DIR="${THALI_ENGINE_DIR:-$HOME/.thali-code/engine}"
@@ -22,10 +22,11 @@ if [ -z "${THALI_API_KEY:-}" ]; then
   exit 1
 fi
 
-if [ ! -d "$ENGINE_DIR" ]; then
-  echo "Thali Code engine not found. Re-run the installer:"
+BIN=$(ls "$ENGINE_DIR/packages/opencode/dist"/opencode-*/bin/opencode 2>/dev/null | head -1)
+if [ -z "$BIN" ] || [ ! -x "$BIN" ]; then
+  echo "Thali Code isn't built yet. Re-run the installer:"
   echo "  curl -fsSL https://raw.githubusercontent.com/thaliai/thali-code/main/install.sh | bash"
   exit 1
 fi
 
-exec bun run "$ENGINE_DIR/packages/opencode/src/index.ts" "$@"
+exec "$BIN" "$@"

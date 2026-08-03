@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Thali Code installer — an AI coding agent for your terminal, wired to Thali.
 #
-# Thali Code runs the open-source OpenCode engine from source, with Thali's own
-# branding and provider config. Safe to run via:
+# Thali Code builds the open-source OpenCode engine — with Thali's own branding
+# and provider config — into a standalone binary. Safe to run via:
 #   curl -fsSL https://raw.githubusercontent.com/thaliai/thali-code/main/install.sh | bash
 #
-# First run clones the engine and installs its dependencies — that takes a few
-# minutes. Later runs update it. See NOTICE for OpenCode attribution (MIT).
+# First run fetches the engine, installs deps, and compiles it — a few minutes.
+# Later runs rebuild it. See NOTICE for OpenCode attribution (MIT).
 set -euo pipefail
 
 RAW="https://raw.githubusercontent.com/thaliai/thali-code/main"
@@ -29,23 +29,33 @@ if ! command -v bun >/dev/null 2>&1; then
 fi
 export PATH="$HOME/.bun/bin:$PATH"
 
-# 2. the engine — clone or update
+# 2. the engine — pinned to the exact OpenCode commit Thali validated (patched
+#    logo + Solid-plugin build). Bump OPENCODE_COMMIT to adopt a newer OpenCode.
+OPENCODE_COMMIT="9535a8f929eeeb4116f3d06d2a8391e0ec72cff5"
 say "Fetching the Thali Code engine (first run takes a few minutes)…"
-if [ -d "$ENGINE_DIR/.git" ]; then
-  git -C "$ENGINE_DIR" pull --ff-only >/dev/null 2>&1 || true
-else
-  mkdir -p "$(dirname "$ENGINE_DIR")"
-  git clone --depth 1 https://github.com/sst/opencode "$ENGINE_DIR" >/dev/null 2>&1
+mkdir -p "$ENGINE_DIR"
+if [ ! -d "$ENGINE_DIR/.git" ]; then
+  git -C "$ENGINE_DIR" init -q
+  git -C "$ENGINE_DIR" remote add origin https://github.com/sst/opencode >/dev/null 2>&1 || true
 fi
+git -C "$ENGINE_DIR" fetch -q --depth 1 origin "$OPENCODE_COMMIT"
+git -C "$ENGINE_DIR" checkout -q -f FETCH_HEAD
 
 # 3. apply Thali branding (the THALI CODE splash, in teal)
 curl -fsSL "$RAW/engine/logo.ts"  -o "$ENGINE_DIR/packages/tui/src/logo.ts"
 curl -fsSL "$RAW/engine/logo.tsx" -o "$ENGINE_DIR/packages/tui/src/component/logo.tsx"
 say "Applied Thali Code branding."
 
-# 4. dependencies
+# 4. dependencies + build the branded binary (bakes the THALI CODE splash in, and
+#    sidesteps the JSX/worker setup that running from source would need)
 ( cd "$ENGINE_DIR" && bun install >/dev/null 2>&1 )
-say "Engine ready."
+say "Building Thali Code (the slow part — a few minutes)…"
+( cd "$ENGINE_DIR/packages/opencode" && bun run script/build.ts --single --skip-embed-web-ui >/dev/null 2>&1 )
+BIN=$(ls "$ENGINE_DIR/packages/opencode/dist"/opencode-*/bin/opencode 2>/dev/null | head -1)
+if [ -z "$BIN" ] || [ ! -x "$BIN" ]; then
+  printf "  ${DIM}Build failed. Please report at github.com/thaliai/thali-code/issues${RST}\n"; exit 1
+fi
+say "Thali Code built."
 
 # 5. Thali provider config (never a silent overwrite)
 mkdir -p "$CFG_DIR"
