@@ -60,18 +60,15 @@ other in the TUI, or pin a default in `~/.config/opencode/opencode.json`:
 > on topped-up credit — pick one before you've added funds and Thali replies with
 > a clear "insufficient credit" message, not a silent failure.
 
-## What this is — and isn't
+## Built on OpenCode
 
-Thali Code **is** a thin, MIT-licensed distribution: a provider config, an
-installer, and branding around the unmodified OpenCode agent. The coding
-intelligence is OpenCode's; the Thali integration is ours. Full credit and
-license terms are in [NOTICE](./NOTICE).
-
-If you want raw OpenCode with your own providers, use
-[OpenCode](https://opencode.ai) directly — it's excellent. Thali Code just makes
-"OpenCode on Thali, in rupees" a one-line install.
+Thali Code is powered by [OpenCode](https://opencode.ai), the excellent
+open-source terminal coding agent (MIT-licensed). Thali Code wires it to the
+Thali gateway, adds live model sync and rupee billing, and ships it as a
+one-line install for Indian developers. Full attribution and license terms are
+in [NOTICE](./NOTICE) — with thanks to the OpenCode maintainers.
 
 ## License
 
-MIT © 2026 Thali Tech Pvt Ltd. Bundles OpenCode (MIT © 2025 opencode). See
+MIT © 2026 Thali Tech Pvt Ltd. Built on OpenCode (MIT © 2025 opencode). See
 [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
