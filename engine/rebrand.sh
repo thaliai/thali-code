@@ -24,8 +24,9 @@ command -v perl >/dev/null 2>&1 || { echo "rebrand.sh needs perl"; exit 1; }
 #     space) is never matched.
 read -r -d '' PERL <<'PL' || true
 s/OpenCode(?![A-Za-z])/Thali Code/g;
-s/\bopencode (--mini|--help|--continue|models|auth|serve|server|session|upgrade|api|tui|run|agent|debug)\b/thali $1/g;
+s/\bopencode (--mini|--help|--continue|-s|models|auth|serve|server|session|upgrade|api|tui|run|agent|debug|mcp|version|x)\b/thali $1/g;
 s/\bopencode is installed\b/thali is installed/g;
+s/\bopencode does not support\b/Thali Code does not support/g;
 PL
 
 # Scope: the TUI, the user-facing CLI, and the one retry message that promotes a

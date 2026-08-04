@@ -44,6 +44,9 @@ git -C "$ENGINE_DIR" checkout -q -f FETCH_HEAD
 # 3. apply Thali branding — the THALI CODE splash (teal) + user-visible text
 curl -fsSL "$RAW/engine/logo.ts"    -o "$ENGINE_DIR/packages/tui/src/logo.ts"
 curl -fsSL "$RAW/engine/logo.tsx"   -o "$ENGINE_DIR/packages/tui/src/component/logo.tsx"
+# The exit screen keeps its OWN private wordmark, separate from logo.ts -- patching
+# logo.ts alone still showed "opencode" on quit.
+curl -fsSL "$RAW/engine/presentation.ts" -o "$ENGINE_DIR/packages/tui/src/util/presentation.ts"
 curl -fsSL "$RAW/engine/rebrand.sh" -o "$ENGINE_DIR/.thali-rebrand.sh"
 bash "$ENGINE_DIR/.thali-rebrand.sh" "$ENGINE_DIR" >/dev/null
 say "Applied Thali Code branding."
