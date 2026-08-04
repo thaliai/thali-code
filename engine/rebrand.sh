@@ -24,7 +24,7 @@ command -v perl >/dev/null 2>&1 || { echo "rebrand.sh needs perl"; exit 1; }
 #     space) is never matched.
 read -r -d '' PERL <<'PL' || true
 s/OpenCode(?![A-Za-z])/Thali Code/g;
-s/\bopencode (--mini|--help|models|auth|serve|server|session|upgrade|api|tui|run)\b/thali $1/g;
+s/\bopencode (--mini|--help|--continue|models|auth|serve|server|session|upgrade|api|tui|run|agent|debug)\b/thali $1/g;
 s/\bopencode is installed\b/thali is installed/g;
 PL
 
@@ -43,5 +43,26 @@ perl -pi -e 's/\.scriptName\("opencode"\)/.scriptName("thali")/g' \
 # Default terminal-tab title (lowercase constant, not caught above).
 perl -pi -e 's/const DEFAULT_TITLE = "opencode"/const DEFAULT_TITLE = "Thali Code"/' \
   "$ENGINE_DIR/packages/tui/src/attention.ts" 2>/dev/null || true
+
+# Suppress OpenCode's paid Zen/Go upsell entirely: empty the provider set that
+# gates the Go-upsell UI, so it never renders (the connect-dialog Zen/Go promos
+# are already gone via disabled_providers in the Thali config).
+perl -pi -e 's/const GO_UPSELL_PROVIDERS = new Set\(\["opencode", "opencode-go"\]\)/const GO_UPSELL_PROVIDERS = new Set([])/' \
+  "$ENGINE_DIR/packages/tui/src/routes/session/index.tsx" 2>/dev/null || true
+
+# Drop the rotating home-screen tips that promote OpenCode-only services/infra
+# which don't exist for Thali: the Zen curated-models tip, the OpenCode GitHub
+# app, the OpenCode container image, and the opencode.ai share link. (Tips that
+# name real engine paths like .opencode/ or opencode.json are left — they are
+# accurate and functional for the engine Thali runs.)
+perl -ni -e '
+  print unless
+    /Thali Code Zen for curated/ ||
+    m{ghcr\.io/anomalyco} ||
+    m{/opencode\{/highlight\} in GitHub} ||
+    /opencode github install/ ||
+    m{/opencode fix this} ||
+    /public opencode\.ai link/;
+' "$ENGINE_DIR/packages/tui/src/feature-plugins/home/tips-view.tsx" 2>/dev/null || true
 
 echo "rebrand: user-visible OpenCode -> Thali Code applied"
