@@ -36,6 +36,26 @@ find "$ENGINE_DIR/packages/tui/src" "$ENGINE_DIR/packages/opencode/src/cli" \
   | xargs -0 perl -0777 -pi -e "$PERL"
 perl -0777 -pi -e "$PERL" "$ENGINE_DIR/packages/opencode/src/session/retry.ts" 2>/dev/null || true
 
+# The SYSTEM PROMPTS. Without this the agent introduces itself to the customer as
+# "I'm opencode" -- the single most visible leak there is, and invisible to any
+# UI-string sweep because it lives in .txt sent to the model. Support URLs are
+# repointed too: sending a Thali customer to OpenCode's issue tracker is both
+# off-brand and useless (those maintainers cannot help with Thali).
+# Checked: these prompt files contain no functional paths (.opencode/,
+# opencode.json), so a plain product-name replace is safe here.
+PROMPTS="$ENGINE_DIR/packages/opencode/src/session/prompt"
+if [ -d "$PROMPTS" ]; then
+  # URLs first, so the word-level replace below cannot corrupt them.
+  perl -0777 -pi -e '
+    s{https://github\.com/anomalyco/opencode/issues}{https://github.com/thaliai/thali-code/issues}g;
+    s{https://github\.com/anomalyco/opencode}{https://github.com/thaliai/thali-code}g;
+    s{https://opencode\.ai/docs}{https://github.com/thaliai/thali-code}g;
+    s{https://opencode\.ai}{https://thaliai.in}g;
+    s/\bOpenCode\b/Thali Code/g;
+    s/\bopencode\b/Thali Code/g;
+  ' "$PROMPTS"/*.txt 2>/dev/null || true
+fi
+
 # CLI program name shown in `thali --help` usage.
 perl -pi -e 's/\.scriptName\("opencode"\)/.scriptName("thali")/g' \
   "$ENGINE_DIR/packages/opencode/src/index.ts" \
